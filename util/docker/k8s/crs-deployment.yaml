@@ -1,0 +1,82 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: crs
+  name: crs
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: crs
+    spec:
+      containers:
+      - env:
+        - name: ALLOWED_HTTP_VERSIONS
+          value: HTTP/1.0 HTTP/1.1 HTTP/2 HTTP/2.0
+        - name: ALLOWED_METHODS
+          value: GET HEAD POST OPTIONS
+        - name: ALLOWED_REQUEST_CONTENT_TYPE
+          value: application/x-www-form-urlencoded|multipart/form-data|text/xml|application/xml|application/soap+xml|application/x-amf|application/json|application/octet-stream|text/plain
+        - name: ALLOWED_REQUEST_CONTENT_TYPE_CHARSET
+          value: utf-8|iso-8859-1|iso-8859-15|windows-1252
+        - name: ANOMALYIN
+          value: "5"
+        - name: ANOMALYOUT
+          value: "4"
+        - name: ARG_LENGTH
+          value: "400"
+        - name: ARG_NAME_LENGTH
+          value: "100"
+        - name: COMBINED_FILE_SIZES
+          value: "1048576"
+        - name: ENFORCE_BODYPROC_URLENCODED
+          value: "1"
+        - name: MAX_FILE_SIZE
+          value: "1048576"
+        - name: MAX_NUM_ARGS
+          value: "255"
+        - name: PARANOIA
+          value: "1"
+        - name: RESTRICTED_EXTENSIONS
+          value: .asa/ .asax/ .ascx/ .axd/ .backup/ .bak/ .bat/ .cdx/ .cer/ .cfg/
+            .cmd/ .com/ .config/ .conf/ .cs/ .csproj/ .csr/ .dat/ .db/ .dbf/ .dll/
+            .dos/ .htr/ .htw/ .ida/ .idc/ .idq/ .inc/ .ini/ .key/ .licx/ .lnk/ .log/
+            .mdb/ .old/ .pass/ .pdb/ .pol/ .printer/ .pwd/ .resources/ .resx/ .sql/
+            .sys/ .vb/ .vbs/ .vbproj/ .vsdisco/ .webinfo/ .xsd/ .xsx/
+        - name: RESTRICTED_HEADERS
+          value: /proxy/ /lock-token/ /content-range/ /translate/ /if/
+        - name: SERVERNAME
+          value: localhost
+        - name: STATIC_EXTENSIONS
+          value: /.jpg/ /.jpeg/ /.png/ /.gif/ /.js/ /.css/ /.ico/ /.svg/ /.webp/
+        - name: TOTAL_ARG_LENGTH
+          value: "64000"
+        image: owasp/modsecurity-crs
+        name: crs
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/modsecurity.d/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+          name: crs-claim0
+        - mountPath: /etc/modsecurity.d/owasp-crs/rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
+          name: crs-claim1
+      restartPolicy: Always
+      volumes:
+      - name: crs-claim0
+        persistentVolumeClaim:
+          claimName: crs-claim0
+      - name: crs-claim1
+        persistentVolumeClaim:
+          claimName: crs-claim1
+status: {}

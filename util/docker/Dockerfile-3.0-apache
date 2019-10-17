@@ -9,6 +9,8 @@ ENV PARANOIA=1
 ENV ANOMALYIN=5
 ENV ANOMALYOUT=4
 
+ENV SETPROXY=1
+
 RUN apt-get update && \
   apt-get -y install python git ca-certificates iproute2 && \
   mkdir /opt/owasp-modsecurity-crs-3.2 && \

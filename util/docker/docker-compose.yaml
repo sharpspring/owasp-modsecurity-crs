@@ -13,13 +13,16 @@ services:
 
   crs:
     image: owasp/modsecurity-crs
+    build:
+        context: .
+        dockerfile: Dockerfile-3.0-nginx
     ports:
       - "80:80"
       # only available if SETTLS was enabled:
       - "443:443"
 
     environment:
-      - SERVERNAME=localhost
+      - SERVERNAME=sharpspring.com
 
       #############################################
       # CRS Variables
@@ -43,6 +46,8 @@ services:
       # If needed: add own httpd-proxy.conf (only available if SETPROXY
       # was enabled during build of parent ModSecurity image)
       #  - ./httpd-proxy.conf:/usr/local/apache2/conf/extra/httpd-proxy.conf
+      - UPSTREAM=104.154.94.123
+      - PROXY=1
 
       #######################################################
       # Various CRS Variables with Default Values
