@@ -5,6 +5,7 @@ metadata:
   labels:
     io.kompose.service: crs-claim0
   name: crs-claim0
+  namespace: waf
 spec:
   accessModes:
   - ReadWriteOnce

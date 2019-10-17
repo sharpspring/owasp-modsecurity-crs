@@ -12,7 +12,7 @@ version: "3"
 services:
 
   crs:
-    image: owasp/modsecurity-crs
+    image: us.gcr.io/privatesharp/modsecurity-crs
     build:
         context: .
         dockerfile: Dockerfile-3.0-nginx
